@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Web QR Code Generator</title>
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+  </head>
+  <body>
+    <label for="text-input">Matn kiriting:</label>
+    <input type="text" id="text-input" />
+    <button onclick="generateQRCode()">QR Kod generatsiya qilish</button>
+    <br />
+    <br />
+    <div id="qrcode"></div>
+    <br />
+    <a
+      onclick="downloadImage()"
+      href="/images/myw3schoolsimage.jpg"
+      download
+      id="download-link"
+      style="display: none"
+      >QR Kodni yuklab olish</a
+    >
+    <br />
+    <button id="printButton" style="display: none">Chop etish</button>
+    <script>
+      document
+        .getElementById('printButton')
+        .addEventListener('click', function () {
+          window.print();
+        });
+      function generateQRCode() {
+        let userInput = document.getElementById('text-input').value.trim();
+        if (userInput === '') {
+          alert('Iltimos, matn kiriting!');
+          return;
+        }
+
+        // QR kodni generatsiya qilish
+        let qrcode = new QRCode(document.getElementById('qrcode'), {
+          text: userInput,
+          width: 128,
+          height: 128,
+        });
+
+        // QR kodni PNG formatida olish
+        let canvas = document.createElement('canvas');
+        canvas.width = 128;
+        canvas.height = 128;
+        let ctx = canvas.getContext('2d');
+        ctx.drawImage(
+          document.getElementById('qrcode').getElementsByTagName('img')[0],
+          0,
+          0
+        );
+
+        // Yuklab olish uchun linkni ko'rsatish
+
+        let downloadLink = document.getElementById('download-link');
+        let printButton = document.getElementById('printButton');
+        downloadLink.style.display = 'block';
+        printButton.style.display = 'block';
+      }
+      function downloadImage() {
+        let downloadLink = document.getElementById('download-link');
+        downloadLink.href = document.querySelector('#qrcode').lastChild.src;
+        downloadLink.download = 'qrcode.png';
+      }
+    </script>
+  </body>
+</html>
